@@ -1,4 +1,3 @@
-/* eslint-disable no-prototype-builtins */
 import { type ClassValue, clsx } from "clsx";
 import qs from "query-string";
 import { twMerge } from "tailwind-merge";
@@ -137,22 +136,22 @@ export function countTransactionCategories(
   let totalCount = 0;
 
   // Iterate over each transaction
-  transactions &&
-    transactions.forEach((transaction) => {
-      // Extract the category from the transaction
-      const category = transaction.category;
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  transactions && transactions.forEach((transaction) => {
+    // Extract the category from the transaction
+    const category = transaction.category;
 
-      // If the category exists in the categoryCounts object, increment its count
-      if (categoryCounts.hasOwnProperty(category)) {
-        categoryCounts[category]++;
-      } else {
-        // Otherwise, initialize the count to 1
-        categoryCounts[category] = 1;
-      }
+    // If the category exists in the categoryCounts object, increment its count
+    if (categoryCounts.hasOwnProperty(category)) {
+      categoryCounts[category]++;
+    } else {
+      // Otherwise, initialize the count to 1
+      categoryCounts[category] = 1;
+    }
 
-      // Increment total count
-      totalCount++;
-    });
+    // Increment total count
+    totalCount++;
+  });
 
   // Convert the categoryCounts object to an array of objects
   const aggregatedCategories: CategoryCount[] = Object.keys(categoryCounts).map(
@@ -196,7 +195,7 @@ export const getTransactionStatus = (date: Date) => {
 };
 
 export const authFormSchema = (type: string) => z.object({
-  // sign-up
+  // sign up
   firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
   lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
   address1: type === 'sign-in' ? z.string().optional() : z.string().max(50),
@@ -205,7 +204,7 @@ export const authFormSchema = (type: string) => z.object({
   postalCode: type === 'sign-in' ? z.string().optional() : z.string().min(3).max(6),
   dateOfBirth: type === 'sign-in' ? z.string().optional() : z.string().min(3),
   ssn: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  // sign-in & sign-up
+  // both
   email: z.string().email(),
-  password: z.string().min(8)
+  password: z.string().min(8),
 })

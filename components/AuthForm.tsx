@@ -4,25 +4,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions';
+import { signIn, signUp } from '@/lib/actions/user.actions';
 import PlaidLink from './PlaidLink';
 
 const AuthForm = ({ type }: { type: string }) => {
@@ -37,7 +28,7 @@ const AuthForm = ({ type }: { type: string }) => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
-            password: ''
+            password: ""
         },
     })
 
@@ -47,7 +38,6 @@ const AuthForm = ({ type }: { type: string }) => {
 
         try {
             // Sign up with Appwrite & create plaid token
-
             if (type === 'sign-up') {
                 const userData = {
                     firstName: data.firstName!,
@@ -63,7 +53,6 @@ const AuthForm = ({ type }: { type: string }) => {
                 }
 
                 const newUser = await signUp(userData);
-
                 setUser(newUser);
             }
 
@@ -72,8 +61,9 @@ const AuthForm = ({ type }: { type: string }) => {
                     email: data.email,
                     password: data.password,
                 })
-
-                if (response) router.push('/')
+                if (response) {
+                    router.push('/')
+                }
             }
         } catch (error) {
             console.log(error);
@@ -140,9 +130,7 @@ const AuthForm = ({ type }: { type: string }) => {
                             )}
 
                             <CustomInput control={form.control} name='email' label="Email" placeholder='Enter your email' />
-
                             <CustomInput control={form.control} name='password' label="Password" placeholder='Enter your password' />
-
                             <div className="flex flex-col gap-4">
                                 <Button type="submit" disabled={isLoading} className="form-btn">
                                     {isLoading ? (

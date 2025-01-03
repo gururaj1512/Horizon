@@ -7,7 +7,6 @@ import { authFormSchema } from '@/lib/utils'
 
 
 const formSchema = authFormSchema('sign-up')
-
 interface CustomInput {
     control: Control<z.infer<typeof formSchema>>,
     name: FieldPath<z.infer<typeof formSchema>>,
@@ -32,6 +31,7 @@ const CustomInput = ({ control, name, label, placeholder }: CustomInput) => {
                                 className='input-class'
                                 type={name === 'password' ? 'password' : 'text'}
                                 {...field}
+                                onChange={(e) => field.onChange(e.target.name)}
                             />
                         </FormControl>
                         <FormMessage

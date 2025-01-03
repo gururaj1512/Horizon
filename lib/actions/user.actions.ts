@@ -44,7 +44,7 @@ export const signIn = async ({ email, password }: signInProps) => {
       secure: true,
     });
 
-    const user = await getUserInfo({ userId: session.userId }) 
+    const user = await getUserInfo({ userId: session.userId })
 
     return parseStringify(user);
   } catch (error) {
@@ -66,18 +66,15 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       password, 
       `${firstName} ${lastName}`
     );
-
     if(!newUserAccount) throw new Error('Error creating user')
 
     const dwollaCustomerUrl = await createDwollaCustomer({
       ...userData,
       type: 'personal'
     })
-
     if(!dwollaCustomerUrl) throw new Error('Error creating Dwolla customer')
 
     const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
-
     const newUser = await database.createDocument(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
@@ -91,7 +88,6 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
     )
 
     const session = await account.createEmailPasswordSession(email, password);
-
     (await cookies()).set("appwrite-session", session.secret, {
       path: "/",
       httpOnly: true,
@@ -109,7 +105,6 @@ export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
     const result = await account.get();
-
     const user = await getUserInfo({ userId: result.$id})
 
     return parseStringify(user);
@@ -124,9 +119,9 @@ export const logoutAccount = async () => {
     const { account } = await createSessionClient();
 
     (await cookies()).delete('appwrite-session');
-
     await account.deleteSession('current');
   } catch (error) {
+    console.log(error);
     return null;
   }
 }
@@ -138,13 +133,12 @@ export const createLinkToken = async (user: User) => {
         client_user_id: user.$id
       },
       client_name: `${user.firstName} ${user.lastName}`,
-      products: ['auth'] as Products[],
+      products: ['auth', 'transactions'] as Products[],
       language: 'en',
       country_codes: ['US'] as CountryCode[],
     }
 
     const response = await plaidClient.linkTokenCreate(tokenParams);
-
     return parseStringify({ linkToken: response.data.link_token })
   } catch (error) {
     console.log(error);
@@ -157,7 +151,7 @@ export const createBankAccount = async ({
   accountId,
   accessToken,
   fundingSourceUrl,
-  sharableId,
+  sharebleId,
 }: createBankAccountProps) => {
   try {
     const { database } = await createAdminClient();
@@ -172,7 +166,7 @@ export const createBankAccount = async ({
         accountId,
         accessToken,
         fundingSourceUrl,
-        sharableId,
+        sharebleId,
       }
     )
 
@@ -222,14 +216,14 @@ export const exchangePublicToken = async ({
     // If the funding source URL is not created, throw an error
     if (!fundingSourceUrl) throw Error;
 
-    // Create a bank account using the user ID, item ID, account ID, access token, funding source URL, and shareableId ID
+    // Create a bank account using the user ID, item ID, account ID, access token, funding source URL, and sharebleId ID
     await createBankAccount({
       userId: user.$id,
       bankId: itemId,
       accountId: accountData.account_id,
       accessToken,
       fundingSourceUrl,
-      sharableId: encryptId(accountData.account_id),
+      sharebleId: encryptId(accountData.account_id),
     });
 
     // Revalidate the path to reflect the changes

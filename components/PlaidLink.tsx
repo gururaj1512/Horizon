@@ -7,16 +7,13 @@ import Image from 'next/image';
 
 const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
     const router = useRouter();
-
     const [token, setToken] = useState('');
 
     useEffect(() => {
         const getLinkToken = async () => {
             const data = await createLinkToken(user);
-
             setToken(data?.linkToken);
         }
-
         getLinkToken();
     }, [user]);
 
@@ -25,9 +22,8 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
             publicToken: public_token,
             user,
         })
-
         router.push('/');
-    }, [user])
+    }, [router, user]);
 
     const config: PlaidLinkOptions = {
         token,
@@ -39,11 +35,7 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
     return (
         <>
             {variant === 'primary' ? (
-                <Button
-                    onClick={() => open()}
-                    disabled={!ready}
-                    className="plaidlink-primary"
-                >
+                <Button onClick={() => open()} disabled={!ready} className="plaidlink-primary">
                     Connect bank
                 </Button>
             ) : variant === 'ghost' ? (
