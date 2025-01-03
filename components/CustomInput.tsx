@@ -31,7 +31,6 @@ const CustomInput = ({ control, name, label, placeholder }: CustomInput) => {
                                 className='input-class'
                                 type={name === 'password' ? 'password' : 'text'}
                                 {...field}
-                                onChange={(e) => field.onChange(e.target.name)}
                             />
                         </FormControl>
                         <FormMessage
